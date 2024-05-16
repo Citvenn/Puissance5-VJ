@@ -25,8 +25,8 @@ public:
     void afficherTour() const;
     void joueurSuivant();
     void choisirModeDeJeu();
-    void choisirTailleGrille(); // Nouvelle méthode pour choisir la taille de la grille
+    void choisirTailleGrille();
     void coupDeJeu(int joueur);
 };
 
-#endif // JEU_H
+#endif 

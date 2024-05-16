@@ -20,7 +20,7 @@ Jeu::~Jeu() {
 
 void Jeu::choisirTailleGrille() {
     int lignes, colonnes;
-    const int longueurGagnante = 5; // Longueur gagnante fixée à 5 pour p5
+    const int longueurGagnante = 5; // longueur gagnante fixée à 5 pour p5
     bool saisieValide = false;
 
     while (!saisieValide) {
@@ -49,6 +49,8 @@ void Jeu::choisirTailleGrille() {
 
     plateau = Plateau(lignes, colonnes, longueurGagnante);
 }
+// méthode d'initialisation du jeu et d'affichage, permet de saisir le cadre du jeu, évite en principe toutes ls mauvaises saisies
+// ex grille trop petites, dimensions autre qu'en chiffre...
 
 void Jeu::choisirModeDeJeu() {
     int choix;
@@ -62,8 +64,8 @@ void Jeu::choisirModeDeJeu() {
         cin >> choix;
 
         if (cin.fail()) {
-            cin.clear(); // Clear the error flag
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
             cout << "Entrée invalide. Veuillez entrer un nombre." << endl;
             continue;
         }
@@ -77,7 +79,7 @@ void Jeu::choisirModeDeJeu() {
             mode = PvE;
             choixValide = true;
             joueur1 = new JoueurHumain(1);
-            joueur2 = new IA(2, 8); // Profondeur fixée à 5 au minimum pour difficulté facile, ne pas dépasser 8 sinon l'ia met des heures à jouer
+            joueur2 = new IA(2, 8); // profondeur de l'ia lié a difficulté (5-8 idéalement)
             int ordre;
             bool ordreValide = false;
             while (!ordreValide) {
@@ -88,8 +90,8 @@ void Jeu::choisirModeDeJeu() {
                 cin >> ordre;
 
                 if (cin.fail()) {
-                    cin.clear(); // Clear the error flag
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                    cin.clear(); 
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
                     cout << "Entrée invalide. Veuillez entrer un nombre." << endl;
                     continue;
                 }
@@ -133,14 +135,17 @@ void Jeu::puissance5() {
         }
     }
 }
+//méthode d'exécution du jeu
 
 void Jeu::afficherTour() const {
     cout << "Tour du joueur " << tour << ": ";
 }
+//permet de voir qui doit jouer, utile en pve vu que le teps de jeu est très variable
 
 void Jeu::joueurSuivant() {
     tour = (tour == 1) ? 2 : 1;
 }
+// expicite
 
 void Jeu::coupDeJeu(int joueur) {
     int colonne;
@@ -151,7 +156,8 @@ void Jeu::coupDeJeu(int joueur) {
         joueur2->choisirCoup(plateau);
     }
 
-    // Afficher la colonne où le pion a été placé
+    // affiche la colonne où le pion a été placé
     colonne = (joueur == 1) ? joueur1->obtenirDerniereColonne() : joueur2->obtenirDerniereColonne();
     cout << "Colonne choisie: " << colonne << endl;
 }
+// méthode pour jouer un tour, polymorphisme qui permet de traiter différentes iinstances de joueur ou ia

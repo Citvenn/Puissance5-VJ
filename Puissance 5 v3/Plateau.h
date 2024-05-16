@@ -15,14 +15,15 @@ private:
 
 public:
     Plateau(int lignes = 6, int colonnes = 12, int longueur = 5); // Dimensions par défaut
-    void afficher() const;
+    void afficher() const; 
     bool estEmplacementValide(int colonne) const;
     int obtenirLigneLibre(int colonne) const;
     void placerPion(int colonne, int joueur);
-    void annulerPion(int ligne, int colonne); // Nouvelle méthode pour annuler un coup
+    void annulerPion(int ligne, int colonne); 
     bool verifierVictoire(int ligne, int colonne, int joueur) const;
     bool estPlein() const;
     
+    //getters nécessaires pour ia qui a besoin de l'accès au plateau ppour générer les coups possibles dans le minimax
     int getNbColonne() const { return nbColonnes; }
     vector<int> getLigne(int ligne) const;
     vector<int> getColonne(int colonne) const;

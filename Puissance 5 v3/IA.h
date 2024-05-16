@@ -33,4 +33,4 @@ public:
     vector<pair<int, int>> coupsPossibles(const Plateau& plateau) const; // Nouvelle méthode parce que la vérification est pas exactement la même que sur python
 };
 
-#endif // IA_H
+#endif 

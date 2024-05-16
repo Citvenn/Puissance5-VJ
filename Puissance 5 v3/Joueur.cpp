@@ -5,4 +5,4 @@
 using namespace std;
 
 Joueur::Joueur(int num) : numero(num) {}
-
+// initialisation des joueurs

@@ -16,4 +16,4 @@ public:
     int obtenirDerniereColonne() const override;
 };
 
-#endif // JOUEURHUMAIN_H
+#endif 

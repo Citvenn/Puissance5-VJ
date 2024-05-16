@@ -11,8 +11,9 @@
 using namespace std;
 
 IA::IA(int num, int profondeur) : Joueur(num), profondeur(profondeur), derniereColonne(-1) {
-    srand(time(nullptr)); // Initialise le générateur de nombres aléatoires
+    srand(time(nullptr)); 
 }
+//Lié au constructeur: initialise l'ia avec le num (jeton de jeu) et la profondeur du minimax
 
 int IA::comptageConsecutifs(const vector<int>& ligne, int joueur) const {
     int consecutifs = 0, maxConsecutifs = 0;
@@ -26,6 +27,7 @@ int IA::comptageConsecutifs(const vector<int>& ligne, int joueur) const {
     }
     return maxConsecutifs;
 }
+//partie 1: permet de compter le nombre de jetons consécutifs dans un motif pour le traiter par la suite
 
 vector<int> IA::motifsGrille(const Plateau& plateau, pair<int, int> coup, int joueur) const {
     int a = coup.first, b = coup.second;
@@ -44,9 +46,10 @@ vector<int> IA::motifsGrille(const Plateau& plateau, pair<int, int> coup, int jo
     motifs.push_back(comptageConsecutifs(diagNeg, joueur));
     return motifs;
 }
+// partie 2: identifie les motifs (alignement de plusieurs jetons) pour calculer les csores associés
 
 int IA::calculerScore(const vector<int>& motifs) const {
-    vector<int> coefs = {0, 0, 1, 5, 10, 1000}; // Scores correspondants à 0, 1, 2, 3, 4, 5 alignements
+    vector<int> coefs = {0, 0, 1, 5, 10, 1000}; // Scores correspondants à 0, 1, 2, 3, 4, 5 jetons alignés
     int score = 0;
     for (int n : motifs) {
         if (n >= coefs.size()) {
@@ -62,16 +65,19 @@ bool IA::coupGagnant(const Plateau& plateau, pair<int, int> coup, int joueur) co
     vector<int> motifs = motifsGrille(plateau, coup, joueur);
     return any_of(motifs.begin(), motifs.end(), [](int n) { return n >= 5; });
 }
+// identifie les motifs de 5 jetons gagnants, car leur score est particulier et doit avoir un poids plus élevé
 
 int IA::scoreVictoire(const Plateau& plateau, pair<int, int> coup, int joueur) const {
     return coupGagnant(plateau, coup, joueur) ? 1000 : 0;
 }
+// associe une valeur à la victoire pour le calcul de score du minimax
 
 double IA::scoreCentre(const Plateau& plateau, pair<int, int> coup) const {
     int colonne = coup.second;
     int centre = plateau.getNbColonne() / 2;
     return 1.0 / (abs(colonne - centre) + 1);
 }
+// méthode pour donner une valeur aux coups joués proches du centre (positions statégiques)
 
 int IA::scoreJoueur(const Plateau& plateau, pair<int, int> dernierCoup, int profondeur) const {
     int score = 0;
@@ -81,19 +87,23 @@ int IA::scoreJoueur(const Plateau& plateau, pair<int, int> dernierCoup, int prof
     score -= (profondeur + 1) * 50 * scoreVictoire(plateau, dernierCoup, 1);
     return score;
 }
+// mise en place d'un calcul de score de joueur pour le minimax
 
 int IA::scoreIA(const Plateau& plateau, pair<int, int> dernierCoup, int profondeur) const {
     int score = 0;
     vector<int> motifsIA = motifsGrille(plateau, dernierCoup, 2);
-    score += (profondeur + 1) * 8 * calculerScore(motifsIA);
-    score += (profondeur + 1) * 2 * scoreCentre(plateau, dernierCoup);
-    score += (profondeur + 1) * 50 * scoreVictoire(plateau, dernierCoup, 2);
+    score += (profondeur + 1) * 10 * calculerScore(motifsIA);
+    score += (profondeur + 1) * 5 * scoreCentre(plateau, dernierCoup);
+    score += (profondeur + 1) * 55 * scoreVictoire(plateau, dernierCoup, 2);
     return score;
 }
+// mise en place d'un calcul de score de l'ia pour le minimax
 
 void IA::annulerCoup(Plateau& plateau, pair<int, int> coup) const {
     plateau.annulerPion(coup.first, coup.second);
 }
+// méthode pour le fonctionnement du minimax: lors du minimax les grilles possibles dans {profondeur} coups sont envisagés et générées en interne pour le calcul de score
+// ces grilles sont crées pour permettre le calcul de score et doivent être détruites coup par coup ensuite
 
 vector<pair<int, int>> IA::coupsPossibles(const Plateau& plateau) const {
     vector<pair<int, int>> coups;
@@ -105,54 +115,54 @@ vector<pair<int, int>> IA::coupsPossibles(const Plateau& plateau) const {
     }
     return coups;
 }
+// méthode de génération des coups dans le minimax 
 
-// Méthode minimax avec élagage alpha-bêta
+// Méthode minimax avec élagage alpha-bêta (cf cours DIA s5 flemme de réexpliquer)
 pair<int, pair<int, int>> IA::minimax(Plateau& plateau, bool maximisation, int profondeur, int alpha, int beta, pair<int, int> dernierCoup) const {
-    // Cas de base : si le jeu est terminé ou si la profondeur maximale est atteinte
+    // cas de base : si le jeu est terminé ou si la profondeur maximale est atteinte, nécessaire acr minimax est récursif
     if (dernierCoup != pair<int, int>(-1, -1)) {
         if (profondeur == 0) {
-            // Évaluer le score pour le joueur ou l'IA en fonction de la profondeur
+            // évaluation du score pour le joueur ou l'IA en fonction de la profondeur
             int score = maximisation ? scoreJoueur(plateau, dernierCoup, profondeur) : scoreIA(plateau, dernierCoup, profondeur);
             return { score, dernierCoup };
         }
         if (coupGagnant(plateau, dernierCoup, maximisation ? 1 : 2)) {
-            // Évaluer le score de victoire
+            // évaluation du score de victoire
             int score = maximisation ? scoreJoueur(plateau, dernierCoup, profondeur) : scoreIA(plateau, dernierCoup, profondeur);
             return { score, dernierCoup };
         }
     }
-
-    // Initialiser la meilleure valeur et le meilleur coup en fonction de la maximisation ou minimisation
+    // initialisation de la meilleure valeur et du meilleur coup en fonction de la maximisation ou minimisation de chaque branche du minimax
     int meilleureValeur = maximisation ? numeric_limits<int>::min() : numeric_limits<int>::max();
     pair<int, int> meilleurCoup = { -1, -1 };
 
-    // Parcourir tous les coups possibles
+    // parcours de tous les coups possibles
     for (const auto& coup : coupsPossibles(plateau)) {
         int ligne = coup.first;
         int colonne = coup.second;
-        // Placer le pion pour le joueur actuel
+        // placeme,t de pion pour le joueur actuel
         plateau.placerPion(colonne, maximisation ? 2 : 1);
-        // Appel récursif de minimax avec les paramètres inversés pour maximisation
+        // appel récursif de minimax avec les paramètres inversés pour maximisation
         auto [valeur, _] = minimax(plateau, !maximisation, profondeur - 1, alpha, beta, { ligne, colonne });
-        // Annuler le coup pour restaurer l'état précédent du plateau
+        // annulation du coup pour restaurer l'état précédent du plateau lors du parcours inverse de l'arbre du minimax
         annulerCoup(plateau, { ligne, colonne });
 
-        // Mise à jour de la meilleure valeur et du meilleur coup en fonction de la maximisation ou minimisation
+        // maj de la meilleure valeur et du meilleur coup en fonction de la maximisation ou minimisation
         if (maximisation) {
             if (valeur > meilleureValeur) {
                 meilleureValeur = valeur;
                 meilleurCoup = { ligne, colonne };
             }
-            alpha = max(alpha, valeur); // Mise à jour de alpha
+            alpha = max(alpha, valeur); // maj de alpha
         } else {
             if (valeur < meilleureValeur) {
                 meilleureValeur = valeur;
                 meilleurCoup = { ligne, colonne };
             }
-            beta = min(beta, valeur); // Mise à jour de beta
+            beta = min(beta, valeur); // maj de beta
         }
 
-        // Élagage alpha-bêta : arrêter l'exploration si alpha >= beta
+        // élagage alpha-bêta : arrêter l'exploration si alpha >= beta
         if (alpha >= beta) {
             break;
         }
@@ -170,8 +180,10 @@ void IA::choisirCoup(Plateau& plateau) const {
         std::cerr << "Erreur: Coup invalide choisi par l'IA." << std::endl;
     }
 }
+//méthode héritée de la classe joueur qui joue un coup en fct du resultat de miniamx
 
 int IA::obtenirDerniereColonne() const {
     return derniereColonne;
 }
+//méthode héritée de a classe joueur qui aide à l'affichage du dernier coup joué vu que la grille est dure à lire à l'affichage
 

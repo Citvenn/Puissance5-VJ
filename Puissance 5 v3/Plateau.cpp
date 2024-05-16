@@ -25,10 +25,12 @@ void Plateau::afficher() const {
     }
     cout << endl;
 }
+//méthode d'affichage de la grille avec una ffichage console
 
 bool Plateau::estEmplacementValide(int colonne) const {
     return grille[0][colonne] == 0;
 }
+// vérifie qu'une case est vide (aka que la valeir de la case vaut 0 et pas 1 ou 2 de valeur de jeton)
 
 int Plateau::obtenirLigneLibre(int colonne) const {
     for (int ligne = nbLignes - 1; ligne >= 0; --ligne) {
@@ -38,6 +40,7 @@ int Plateau::obtenirLigneLibre(int colonne) const {
     }
     return -1;
 }
+//permet  la selection de ligne pour jouer
 
 void Plateau::placerPion(int colonne, int joueur) {
     int ligne = obtenirLigneLibre(colonne);
@@ -45,6 +48,7 @@ void Plateau::placerPion(int colonne, int joueur) {
         grille[ligne][colonne] = joueur;
     }
 }
+// modifie la valeur d'une case en celle du jeton de joueur (1 ou 2)
 
 void Plateau::annulerPion(int ligne, int colonne) {
     if (ligne >= 0 && ligne < nbLignes && colonne >= 0 && colonne < nbColonnes) {
@@ -66,7 +70,6 @@ bool Plateau::verifierVictoire(int ligne, int colonne, int joueur) const {
             if (gagnant) return true;
         }
     }
-
     // Vérifie les colonnes
     for (int col = 0; col < nbColonnes; ++col) {
         for (int row = 0; row <= nbLignes - longueurGagnante; ++row) {
@@ -80,8 +83,7 @@ bool Plateau::verifierVictoire(int ligne, int colonne, int joueur) const {
             if (gagnant) return true;
         }
     }
-
-    // Vérifie les diagonales principales
+    // Vérifie les diagonales ascendantes (ligne + et colonne +)
     for (int row = 0; row <= nbLignes - longueurGagnante; ++row) {
         for (int col = 0; col <= nbColonnes - longueurGagnante; ++col) {
             bool gagnant = true;
@@ -94,8 +96,7 @@ bool Plateau::verifierVictoire(int ligne, int colonne, int joueur) const {
             if (gagnant) return true;
         }
     }
-
-    // Vérifie les diagonales secondaires
+    // Vérifie les diagonales descendantes (lignes + et colonnes -)
     for (int row = 0; row <= nbLignes - longueurGagnante; ++row) {
         for (int col = longueurGagnante - 1; col < nbColonnes; ++col) {
             bool gagnant = true;
@@ -111,6 +112,7 @@ bool Plateau::verifierVictoire(int ligne, int colonne, int joueur) const {
 
     return false;
 }
+// méthode de vérification de victoire
 
 bool Plateau::estPlein() const {
     for (int i = 0; i < nbColonnes; ++i) {
@@ -120,7 +122,9 @@ bool Plateau::estPlein() const {
     }
     return true;
 }
+// méthode de vérif de remplissage, utile en cas de match nul
 
+//getters
 vector<int> Plateau::getLigne(int ligne) const {
     if (ligne >= 0 && ligne < nbLignes) {
         return grille[ligne];
