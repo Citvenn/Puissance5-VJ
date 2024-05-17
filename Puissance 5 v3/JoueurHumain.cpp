@@ -16,8 +16,8 @@ void JoueurHumain::choisirCoup(Plateau& plateau) const {
         cout << "Joueur " << numero << ", entrez le numéro de colonne: ";
         cin >> colonne;
         if (cin.fail()) {
-            cin.clear(); // Clear the error flag
-            cin.ignore(std::numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cin.clear(); 
+            cin.ignore(std::numeric_limits<streamsize>::max(), '\n'); 
             cout << "Entrée invalide. Veuillez entrer un nombre." << endl;
             continue;
         }
