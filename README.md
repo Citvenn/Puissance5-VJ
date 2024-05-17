@@ -13,5 +13,5 @@ Ce projet implémente le jeu Puissance 5 en C++ avec des options de jeu contre u
 
 ## Prérequis
 
-Compilateur C++ (supportant C++11 ou supérieur): recommandé pour éviter les problèmes de compilation lié à std::numericlimits de <limits>
+Compilateur C++ (supportant C++11 ou supérieur): recommandé pour éviter les problèmes de compilation lié à std::numeric_limits de <limits>
 
