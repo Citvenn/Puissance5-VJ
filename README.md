@@ -1,8 +1,17 @@
-Ce projet est la version finale du puissance 5 dans le cadre du cours de c++. Ce projet est composé des fichiers suivants :
+# Puissance 5 Game
 
-Puissance 5 v3.cpp : Point d'entrée principal de l'application.
-Jeu.h et Jeu.cpp : Gestion du déroulement du jeu.
-Joueur.h et Joueur.cpp : Définition de la classe Joueur (classe de base pour les joueurs).
-JoueurHumain.h et JoueurHumain.cpp : Définition de la classe JoueurHumain (hérite de Joueur).
-IA.h et IA.cpp : Définition de la classe IA (hérite de Joueur).
-Plateau.h et Plateau.cpp : Gestion du plateau de jeu.
+## Description
+
+Ce projet implémente le jeu Puissance 5 en C++ avec des options de jeu contre un autre joueur ou contre une IA. Le projet utilise des concepts avancés de C++ comme l'héritage, le polymorphisme et les méthodes virtuelles.
+
+## Fonctionnalités
+
+- Joueur contre Joueur (PvP)
+- Joueur contre IA (PvE)
+- Choix de la taille de la grille par l'utilisateur
+- Affichage de la grille et des coups joués
+
+## Prérequis
+
+Compilateur C++ (supportant C++11 ou supérieur): recommandé pour éviter les problèmes de compilation lié à std::numericlimits de <limits>
+
